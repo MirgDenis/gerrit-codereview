@@ -1,0 +1,94 @@
+1) Create instance with script_for_instance. Make SimpleHTTPServer and download gerrit-codereview (in future it should be placed in git-hub or smth).
+
+2) Execute following command to change ip of docker0 interface.
+cat << EOF > /etc/docker/daemon.json 
+{
+  "bip": "10.159.169.1/16"
+}
+EOF
+
+In docker-compose file you can find description of network address containers, if smth went wrong with connection it probably happend due to the crossing ip ranges.
+
+3) In case of project directory /home/dmyrhorodskyi/Downloads/gerrit-codereview/ create following directories by executing commands:
+
+mkdir -p /home/dmyrhorodskyi/Downloads/gerrit-codereview/gerrit/etc \
+/home/dmyrhorodskyi/Downloads/gerrit-codereview/gerrit/git /home/dmyrhorodskyi/Downloads/gerrit-codereview/gerrit/index \
+/home/dmyrhorodskyi/Downloads/gerrit-codereview/gerrit/cache /home/dmyrhorodskyi/Downloads/gerrit-codereview/postgres \
+/home/dmyrhorodskyi/Downloads/gerrit-codereview/ldap/var /home/dmyrhorodskyi/Downloads/gerrit-codereview/ldap/etc
+
+sudo chown -R 1000:1000 /home/dmyrhorodskyi/Downloads/gerrit-codereview/gerrit
+
+4) Create files with following contet or you can copy them from files directory with changin of "canonicalWebUrl" parameterin gerrit.config and docker-compose:
+
+.../gerrit/etc/gerrit.config
+############################################
+cat << EOF > /home/dmyrhorodskyi/Downloads/gerrit-codereview/gerrit/etc/gerrit.config
+[gerrit]
+  basePath = git
+  canonicalWebUrl = http://localhost
+
+[database]
+  type = postgresql
+  hostname = postgres
+  database = reviewdb
+  username = gerrit
+
+[index]
+  type = LUCENE
+
+[auth]
+  type = ldap
+  gitBasicAuth = true
+    gitBasicAuthPolicy = HTTP
+
+[ldap]
+  server = ldap://ldap-kha.kha.mirantis.net
+  accountBase = ou=people,o=mirantis,dc=mirantis,dc=net
+  groupBase = ou=groups,o=mirantis,dc=mirantis,dc=net
+  username = 
+  password =
+  accountFullName = cn
+  accountPattern = (&(objectClass=person)(uid=${username}))
+  accountEmailAddress = mail
+  groupMemberPattern = (&(objectClass=Posixgroup)(member=${cn}))
+  sslVerify =
+  accountSshUserName =
+
+[sendemail]
+  smtpServer = localhost
+
+[sshd]
+  listenAddress = *:29418
+
+[httpd]
+  listenUrl = http://*:8080/
+
+[cache]
+  directory = cache
+
+[container]
+  user = root
+EOF
+##############################################
+
+
+.../gerrit/etc/secure.config
+##############################################
+cat << EOF > /home/dmyrhorodskyi/Downloads/gerrit-codereview/gerrit/etc/secure.config
+[database]
+  password = secret
+
+[ldap]
+  password = secret
+EOF
+##############################################
+
+5) Uncomment entrypoint and run commands:
+docker-compose up -d postgres
+docker-compose logs -f postgres
+docker-compose up gerrit
+
+6) Comment endtry point and run command:
+docker-compose up -d
+
+7) Verify by curl fip_of_instance:8080

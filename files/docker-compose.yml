@@ -1,0 +1,36 @@
+version: '2'
+services:
+  gerrit:
+    image: gerritcodereview/gerrit
+    environment:
+     - CANONICAL_WEB_URL=http://172.18.194.190:8080
+    ports:
+     - "29418:29418"
+     - "8080:8080"
+    depends_on:
+     - postgres
+    volumes:
+     - /home/ubuntu/Downloads/gerrit-codereview/gerrit/etc:/var/gerrit/etc
+     - /home/ubuntu/Downloads/gerrit-codereview/gerrit/git:/var/gerrit/git
+     - /home/ubuntu/Downloads/gerrit-codereview/gerrit/index:/var/gerrit/index
+     - /home/ubuntu/Downloads/gerrit-codereview/gerrit/cache:/var/gerrit/cache
+    #entrypoint: java -jar /var/gerrit/bin/gerrit.war init -d /var/gerrit
+    networks:
+     - ci-net
+  
+  postgres:
+    image: postgres:9.6
+    environment:
+     - POSTGRES_USER=gerrit
+     - POSTGRES_PASSWORD=secret
+     - POSTGRES_DB=reviewdb
+    volumes:
+     - /home/ubuntu/Downloads/gerrit-codereview/postgres:/var/lib/postgresql/data
+    networks:
+     - ci-net
+
+networks:
+  ci-net:
+    ipam:
+      config:
+        - subnet: 172.177.0.0/16
