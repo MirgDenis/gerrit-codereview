@@ -36,7 +36,7 @@ cat << EOF > /etc/docker/daemon.json
 EOF
 service docker restart
 
-git clone https://github.com/MirgDenis/gerrit-codereview.git /home/ubuntu/Downloads
+git clone https://github.com/MirgDenis/gerrit-codereview.git /home/ubuntu/Downloads/gerrit-codereview
 mkdir -p /home/ubuntu/Downloads/gerrit-codereview/gerrit/etc \
 /home/ubuntu/Downloads/gerrit-codereview/gerrit/git /home/ubuntu/Downloads/gerrit-codereview/gerrit/index \
 /home/ubuntu/Downloads/gerrit-codereview/gerrit/cache /home/ubuntu/Downloads/gerrit-codereview/postgres \
@@ -47,10 +47,11 @@ cp /home/ubuntu/Downloads/gerrit-codereview/files/secure.config /home/ubuntu/Dow
 
 chown -R 1000:1000 /home/ubuntu/Downloads/gerrit-codereview/gerrit
 
-sed -i 's|#entrypoint|entrypoint|' /home/dmyrhorodskyi/Downloads/gerrit-codereview/files/docker-compose.yml
+cd /home/ubuntu/Downloads/gerrit-codereview/files
+sed -i 's|#entrypoint|entrypoint|' /home/ubuntu/Downloads/gerrit-codereview/files/docker-compose.yml
 docker-compose up -d postgres
 sleep 30
 docker-compose up gerrit
-sed -i 's|entrypoint|#entrypoint|' /home/dmyrhorodskyi/Downloads/gerrit-codereview/files/docker-compose.yml
+sed -i 's|entrypoint|#entrypoint|' /home/ubuntu/Downloads/gerrit-codereview/files/docker-compose.yml
 docker-compose up -d
 

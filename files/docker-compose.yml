@@ -3,7 +3,7 @@ services:
   gerrit:
     image: gerritcodereview/gerrit
     environment:
-     - CANONICAL_WEB_URL=http://172.18.194.190:8080
+     - CANONICAL_WEB_URL=http://172.16.242.157:8080
     ports:
      - "29418:29418"
      - "8080:8080"
