@@ -9,20 +9,20 @@ EOF
 
 In docker-compose file you can find description of network address containers, if smth went wrong with connection it probably happend due to the crossing ip ranges.
 
-3) In case of project directory /home/dmyrhorodskyi/Downloads/gerrit-codereview/ create following directories by executing commands:
+3) In case of project directory /home/ubuntu/Downloads/gerrit-codereview/ create following directories by executing commands:
 
-mkdir -p /home/dmyrhorodskyi/Downloads/gerrit-codereview/gerrit/etc \
-/home/dmyrhorodskyi/Downloads/gerrit-codereview/gerrit/git /home/dmyrhorodskyi/Downloads/gerrit-codereview/gerrit/index \
-/home/dmyrhorodskyi/Downloads/gerrit-codereview/gerrit/cache /home/dmyrhorodskyi/Downloads/gerrit-codereview/postgres \
-/home/dmyrhorodskyi/Downloads/gerrit-codereview/ldap/var /home/dmyrhorodskyi/Downloads/gerrit-codereview/ldap/etc
+mkdir -p /home/ubuntu/Downloads/gerrit-codereview/gerrit/etc \
+/home/ubuntu/Downloads/gerrit-codereview/gerrit/git /home/ubuntu/Downloads/gerrit-codereview/gerrit/index \
+/home/ubuntu/Downloads/gerrit-codereview/gerrit/cache /home/ubuntu/Downloads/gerrit-codereview/postgres \
+/home/ubuntu/Downloads/gerrit-codereview/ldap/var /home/ubuntu/Downloads/gerrit-codereview/ldap/etc
 
-sudo chown -R 1000:1000 /home/dmyrhorodskyi/Downloads/gerrit-codereview/gerrit
+sudo chown -R 1000:1000 /home/ubuntu/Downloads/gerrit-codereview/gerrit
 
 4) Create files with following contet or you can copy them from files directory with changin of "canonicalWebUrl" parameterin gerrit.config and docker-compose:
 
 .../gerrit/etc/gerrit.config
 ############################################
-cat << EOF > /home/dmyrhorodskyi/Downloads/gerrit-codereview/gerrit/etc/gerrit.config
+cat << EOF > /home/ubuntu/Downloads/gerrit-codereview/gerrit/etc/gerrit.config
 [gerrit]
   basePath = git
   canonicalWebUrl = http://localhost
@@ -74,7 +74,7 @@ EOF
 
 .../gerrit/etc/secure.config
 ##############################################
-cat << EOF > /home/dmyrhorodskyi/Downloads/gerrit-codereview/gerrit/etc/secure.config
+cat << EOF > /home/ubuntu/Downloads/gerrit-codereview/gerrit/etc/secure.config
 [database]
   password = secret
 
